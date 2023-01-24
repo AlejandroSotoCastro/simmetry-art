@@ -1,26 +1,52 @@
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageOps
 
-im = Image.new('RGB', (100, 100), ("#0d1117"))
+sqSize = 20
+ratio = 0.5
+numSqX = 20
+numSqY = 20
+baseColor = "#0d1117"
+
+margin = sqSize * ratio
+width = int(sqSize * numSqX + margin * (numSqX+1))
+height = int(sqSize * numSqY + margin * (numSqY+1))
+size = (width,height)
+
+print(size,margin)
+
+def fillGrid(color,size, margin):
+  count = 0
+  x1 = margin
+  x2 = margin + size
+  for x in range(numSqX):
+    y1 = margin
+    y2 = margin + size
+    for y in range(numSqY):
+      draw.rectangle((x1, y1, x2, y2), fill=(color),)
+      y1+= margin + size
+      y2+= margin + size
+    x1+= margin + size
+    x2+= margin + size
+
+
+im = Image.new('RGB', (width, height), baseColor)
 draw = ImageDraw.Draw(im)
 
-initialX = 5 
-initialY = 5
-size = 10
-
-# draw.rectangle((initialX, initialY, 15, 15), fill=("#9be9a8"),)
-# draw.rectangle((15,20,25,30), fill=("#40c463"),)
-# draw.rectangle((20,10,30,20), fill=("#30a14e"),)
-# draw.rectangle((20,30,30,40), fill=("#216e39"),)
+fillGrid("#9be9a8",sqSize,margin)
 
 
-
-colors = ["#9be9a8", "#40c463", "#30a14e","#216e39"]
-for x in colors:
-  draw.rectangle((initialX, initialY, size, size), fill=(x),)
-  initialX += 15 
-  initialY += 15
-  size += 15
+# cool greens"#9be9a8"
+# cool greens"#40c463"
+# cool greens"#30a14e"
+# cool greens"#216e39"
 
 
-im.save('result.png', quality=95)
-im.show()
+
+# colors = ["#9be9a8", "#40c463", "#30a14e","#216e39"]
+
+aux = ImageOps.mirror(im)
+new_image = Image.new('RGB',(2*width, height), (250,250,250))
+new_image.paste(im, (0, 0) )
+new_image.paste(aux, (width, 0) )
+
+new_image.save('result.png', quality=95)
+new_image.show()
